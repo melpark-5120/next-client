@@ -53,36 +53,56 @@ const population = [
 
 export default function PopulationChart() {
   return (
-    <Line
-      data={{
-        labels: years,
-        datasets: [
-          {
-            label: "Population (Longford - Loch Sport)",
-            data: population,
-            fill: true,
-            pointRadius: 3,
-            tension: 0.3,
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="col-span-2">
+        <p className="text-neutral-500">Population Growth in</p>
+        <p className="text-xl font-bold">Longford - Loch Sport</p>
+      </div>
+      <div className="flex flex-col items-center justify-center bg-neutral-200 rounded-2xl p-6">
+        <p>Population Growth</p>
+        <div className="flex items-end font-bold">
+          <p className="text-2xl">34</p>
+          <p>%</p>
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center bg-neutral-200 rounded-2xl p-6">
+        <p>Blabla Idk what should be here</p>
+        <div className="flex items-end font-bold">
+          <p className="text-2xl">34</p>
+          <p>%</p>
+        </div>
+      </div>
+      <Line
+        data={{
+          labels: years,
+          datasets: [
+            {
+              label: "Population (Longford - Loch Sport)",
+              data: population,
+              fill: true,
+              pointRadius: 3,
+              tension: 0.3,
+            },
+          ],
+        }}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top" as const,
+            },
+            tooltip: {
+              mode: "index" as const,
+              intersect: false,
+            },
           },
-        ],
-      }}
-      options={{
-        responsive: true,
-        plugins: {
-          legend: {
-            position: "top" as const,
+          scales: {
+            y: {
+              beginAtZero: false,
+            },
           },
-          tooltip: {
-            mode: "index" as const,
-            intersect: false,
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: false,
-          },
-        },
-      }}
-    />
+        }}
+      />
+    </div>
   );
 }
