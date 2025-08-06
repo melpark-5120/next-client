@@ -1,20 +1,19 @@
-import Image from "next/image";
+import Header from "@/components/Header";
+import PopulationChart from "@/components/PopulationChart";
 
 export default function Home() {
   return (
     <div className="font-sans">
-      <div className="flex items-center justify-between p-4 bg-neutral-100 text-neutral-900 shadow-md fixed top-0 left-0 right-0 z-10 backdrop-blur-sm">
-        <h1 className="text-2xl font-bold">Melgrow</h1>
-      </div>
-      <main className="flex flex-col md:flex-row gap-4 h-dvh">
-        <div className="flex-1 h-full bg-neutral-500">
-
-        </div>
-                <div className="flex-1">
-
+      <Header />
+      <main className="flex flex-col md:flex-row gap-4 h-dvh pt-16">
+        <div className="flex-1 h-full bg-neutral-500"></div>
+        <div className="flex-1">
+          <div className="mt-4">
+            <PopulationChart />
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+      {/* <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -60,7 +59,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }
