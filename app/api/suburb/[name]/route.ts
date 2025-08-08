@@ -1,10 +1,8 @@
 import { NextRequest } from 'next/server';
 
-export function GET(
-  req: NextRequest,
-  { params }: { params: { name: string } }
-) {
-  const { name } = params;
+export function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const name = url.pathname.split('/').pop() || '';
 
   const fakeData = {
     name: decodeURIComponent(name),
