@@ -38,7 +38,7 @@ export default function Map({ selectedSuburb, setSelectedSuburb }: MapProps) {
       // 加载GeoJSON数据
       map.addSource('suburbs', {
         type: 'geojson',
-        data: '/SA2_2021_AUST_GDA2020.json',
+        data: '/SA2_2021_AUST_GDA2020_SIM.json',
       });
 
       // 填充图层
