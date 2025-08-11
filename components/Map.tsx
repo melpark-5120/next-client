@@ -2,7 +2,10 @@
 
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Search } from 'lucide-react';
+import { fetchAllSuburbs } from '@/lib/api';
+import { Combobox } from './ui/combobox';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -16,6 +19,24 @@ export default function Map({ selectedSuburb, setSelectedSuburb }: MapProps) {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [hoveredSuburb, setHoveredSuburb] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [suburbQuery, setSuburbQuery] = useState<string>('');
+  const [suburbList, setSuburbList] = useState<string[]>([]);
+
+  const suburbListFiltered = useMemo(() => {
+    return suburbList?.filter((suburb) =>
+      suburb.toLowerCase().includes(suburbQuery.toLowerCase())
+    );
+  }, [suburbList, suburbQuery]);
+
+  useEffect(() => {
+    const fetchSuburbs = async () => {
+      const suburbs = await fetchAllSuburbs();
+      setSuburbList(suburbs.map((a) => a.sa2_name));
+    };
+
+    fetchSuburbs();
+  }, []);
 
   // 初始化地图，仅执行一次
   useEffect(() => {
@@ -110,9 +131,9 @@ export default function Map({ selectedSuburb, setSelectedSuburb }: MapProps) {
       map.setPaintProperty('suburbs-fill', 'fill-color', [
         'case',
         ['==', ['get', 'name'], selectedSuburb ?? ''],
-        '#3b82f6',
+        '#10b981',
         ['==', ['get', 'name'], hoveredSuburb ?? ''],
-        '#a5b4fc',
+        '#d0fae5',
         '#e5e7eb',
       ]);
     } catch (err) {
@@ -122,8 +143,18 @@ export default function Map({ selectedSuburb, setSelectedSuburb }: MapProps) {
 
   return (
     <div className="relative w-full h-full">
+      <div className='absolute flex items-center gap-4 z-10 top-6 left-6 bg-white pl-4 p-1 rounded shadow text-sm text-gray-800'>
+        <Search/>
+        <Combobox
+          options={suburbListFiltered.map((suburb) => ({ value: suburb, label: suburb }))}
+          placeholder="Select suburb..."
+          emptyText="No suburb found."
+          value={selectedSuburb || undefined}
+          onChange={setSelectedSuburb}
+        />
+      </div>
       {loading && (
-        <div className="absolute z-10 top-2 left-2 bg-white px-3 py-1 rounded shadow text-sm text-gray-800">
+        <div className="absolute z-10 top-6 left-6 bg-white px-3 py-8 rounded shadow text-sm text-gray-800">
           Loading Map...
         </div>
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Chart as ChartJS,
   LineElement,
@@ -21,6 +21,7 @@ import {
   PopulationRow,
   VehicleRegistrationRow,
 } from "@/lib/api";
+import { Car } from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -47,8 +48,6 @@ export default function InfoPanel({ suburbName }: InfoPanelProps) {
   );
 
   const [loadErr, setLoadErr] = useState<string | null>(null);
-
-  console.log(populationRow, vehicleVic, loadErr);
 
   useEffect(() => {
     if (!suburbName) return;
@@ -171,7 +170,18 @@ export default function InfoPanel({ suburbName }: InfoPanelProps) {
 
   if (!suburbName) {
     return (
-      <div className="p-4">
+      <div className="p-4 pt-24 flex flex-col items-center space-y-4 text-center">
+        <div className="flex items-center space-x-2 text-emerald-500">
+          <Car
+            className="size-16"
+          />
+          <h1 className="text-5xl font-bold mt-4">Melgrow</h1>
+        </div>
+        <h2 className="text-2xl my-5">
+          Gain insight to Melbourne&apos;s population and vehicle
+          <br />
+          ownership and see how YOU can contribute!
+        </h2>
         <p className="text-gray-500">Please select a suburb on the map.</p>
       </div>
     );
@@ -191,6 +201,12 @@ export default function InfoPanel({ suburbName }: InfoPanelProps) {
         <p>No population data available for {suburbName}.</p>
       </div>
     );
+  }
+
+  if (loadErr) {
+    <div className="p-4">
+      <p>Error loading data for {suburbName}.</p>
+    </div>  
   }
 
   return (
