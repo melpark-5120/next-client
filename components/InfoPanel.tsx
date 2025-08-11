@@ -202,9 +202,13 @@ export default function InfoPanel({ suburbName }: InfoPanelProps) {
           value={currentPopulation.toLocaleString()}
         />
         <StatCard
-          title="Growth since 2021"
-          value={`+${growthRate}%`}
-          color="text-green-600"
+          title="Population growth since 2021"
+          value={`${growthRate}%`}
+          color={
+            typeof growthRate === "string" && parseFloat(growthRate) > 0
+              ? "text-green-600"
+              : "text-red-600"
+          }
         />
       </div>
 
