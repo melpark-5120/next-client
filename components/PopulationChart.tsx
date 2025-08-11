@@ -8,7 +8,9 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  ChartOptions,
+  TooltipItem
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -24,8 +26,15 @@ ChartJS.register(
 
 interface PopulationChartProps {
   years: string[];
-  populationValues: number[];
-  carValues: number[];
+  populationValues: (number | undefined)[];
+  carValues: (number | undefined)[];
+}
+
+function toBase100(values: (number | undefined)[]): number[] {
+  const base = values.find(v => typeof v === 'number' && v > 0) ?? 1;
+  return values.map(v =>
+    typeof v === 'number' && v > 0 ? (v / base) * 100 : NaN
+  );
 }
 
 export default function PopulationChart({
@@ -33,6 +42,9 @@ export default function PopulationChart({
   populationValues,
   carValues
 }: PopulationChartProps) {
+  const popIdx = toBase100(populationValues);
+  const carIdx = toBase100(carValues);
+
   return (
     <Line
       data={{
@@ -40,19 +52,21 @@ export default function PopulationChart({
         datasets: [
           {
             label: 'Population',
-            data: populationValues,
+            data: popIdx,
             fill: false,
             borderColor: 'rgb(59,130,246)',
             tension: 0.3,
-            pointRadius: 3
+            pointRadius: 3,
+            spanGaps: true
           },
           {
-            label: 'Car Ownership',
-            data: carValues,
+            label: 'Vehicle registrations',
+            data: carIdx,
             fill: false,
             borderColor: 'rgb(34,197,94)',
             tension: 0.3,
-            pointRadius: 3
+            pointRadius: 3,
+            spanGaps: true
           }
         ]
       }}
@@ -60,12 +74,35 @@ export default function PopulationChart({
         responsive: true,
         plugins: {
           legend: { position: 'top' },
-          tooltip: { mode: 'index', intersect: false }
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: (ctx: TooltipItem<'line'>) => {
+                const i = ctx.dataIndex;
+                if (ctx.datasetIndex === 0) {
+                  const raw = populationValues[i];
+                  return raw != null
+                    ? `Population: ${raw.toLocaleString()} actual`
+                    : '';
+                } else {
+                  const raw = carValues[i];
+                  return raw != null
+                    ? `Vehicles (VIC): ${raw.toLocaleString()} actual`
+                    : '';
+                }
+              },
+              footer: () => 'Index base = first non-zero value in each series'
+            }
+          }
         },
         scales: {
-          y: { beginAtZero: false }
+          y: {
+            beginAtZero: false,
+            title: { display: true, text: 'Index (base = 100)' }
+          }
         }
-      }}
+      } as ChartOptions<'line'>}
     />
   );
 }
