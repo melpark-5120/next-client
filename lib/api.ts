@@ -58,6 +58,12 @@ export async function fetchAllPopulation(): Promise<PopulationRow[]> {
   return res.json();
 }
 
+export async function fetchAllSuburbs(): Promise<PopulationRow[]> {
+  const res = await fetch(`${API_BASE}/api/suburbs`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch suburbs");
+  return res.json();
+}
+
 export async function fetchPopulationBySA2Name(sa2Name: string): Promise<PopulationRow[]> {
   const res = await fetch(`${API_BASE}/api/population/${encodeURIComponent(sa2Name)}`, {
     cache: "no-store",
