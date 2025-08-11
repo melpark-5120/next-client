@@ -185,6 +185,14 @@ export default function InfoPanel({ suburbName }: InfoPanelProps) {
     );
   }
 
+  if (!loading && (!populationRow || !currentPopulation)) {
+    return (
+      <div className="p-4">
+        <p>No population data available for {suburbName}.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 space-y-4 animate-fade-in">
       <h2 className="text-2xl font-semibold">{populationRow.sa2_name}</h2>
