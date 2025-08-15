@@ -229,7 +229,7 @@ export default function InfoPanel({ suburbName }: InfoPanelProps) {
       </div>
 
       {/* 折线图区域 */}
-      <Card>
+      <Card className="px-4">
         <PopulationChart
           years={years}
           populationValues={populationValues as number[]}
